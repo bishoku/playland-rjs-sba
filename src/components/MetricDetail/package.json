@@ -1,0 +1,6 @@
+{
+  "name": "MetricDetail",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./MetricDetail.js"
+}

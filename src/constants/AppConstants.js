@@ -1,0 +1,8 @@
+const ActionTypes = {
+    FETCH_HEALTH: 'FETCH_HEALTH',
+    FETCH_ENV: 'FETCH_ENV',
+    FETCH_METRICS: 'FETCH_METRICS',
+    FETCH_METRIC_DETAIL: 'FETCH_METRIC_DETAIL'
+}
+
+export default ActionTypes;

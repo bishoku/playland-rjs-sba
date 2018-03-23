@@ -1,0 +1,6 @@
+{
+  "name": "Property Sources",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./PropertySources.js"
+}
