@@ -11,8 +11,18 @@ import {
 
 class MetricDetail extends Component {
 
+    constructor(props) {
+        super(props);
+        this.state = {};
+        fetch("http://localhost:8090/actuator/metrics/" + props.metricKey)
+            .then(response => response.json())
+            .then(json => {
+                debugger;
+                this.state.metric = json;
+            });
+    }
+
     render() {
-        debugger;
         return (
             <Col xs="12" sm="6" md="6" lg="4" xl="4">
                 <Card>
