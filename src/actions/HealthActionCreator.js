@@ -11,7 +11,6 @@ const HealthActionCreator = {
         fetch("http://localhost:8090/actuator/health")
             .then(response => response.json())
             .then(json => {
-                debugger;
                 AppDispatcher.dispatch({
                     type: ActionTypes.FETCH_HEALTH,
                     data: {
