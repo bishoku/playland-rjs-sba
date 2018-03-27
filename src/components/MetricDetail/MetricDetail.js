@@ -11,32 +11,6 @@ import {
     Table
 } from 'reactstrap';
 
-const line = {
-    labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-    datasets: [
-        {
-            label: 'My First dataset',
-            fill: false,
-            lineTension: 0.1,
-            backgroundColor: 'rgba(75,192,192,0.4)',
-            borderColor: 'rgba(75,192,192,1)',
-            borderCapStyle: 'butt',
-            borderDash: [],
-            borderDashOffset: 0.0,
-            borderJoinStyle: 'miter',
-            pointBorderColor: 'rgba(75,192,192,1)',
-            pointBackgroundColor: '#fff',
-            pointBorderWidth: 1,
-            pointHoverRadius: 5,
-            pointHoverBackgroundColor: 'rgba(75,192,192,1)',
-            pointHoverBorderColor: 'rgba(220,220,220,1)',
-            pointHoverBorderWidth: 2,
-            pointRadius: 1,
-            pointHitRadius: 10,
-            data: [65, 59, 80, 81, 56, 55, 40]
-        }
-    ]
-};
 
 class MetricDetail extends Component {
 
@@ -44,23 +18,44 @@ class MetricDetail extends Component {
         super(props);
         this.state = {
             metric: {
-                "name": "logback.events",
+                "name": "",
                 "measurements": [
                     {
-                        "statistic": "COUNT",
-                        "value": 39.0
+                        "statistic": "",
+                        "value": 0
                     }
                 ],
                 "availableTags": [
                     {
-                        "tag": "level",
-                        "values": [
-                            "warn",
-                            "trace",
-                            "debug",
-                            "error",
-                            "info"
-                        ]
+                        "tag": "",
+                        "values": []
+                    }
+                ]
+            },
+            graphData: {
+                labels: [],
+                datasets: [
+                    {
+                        label: 'My First dataset',
+                        fill: false,
+                        lineTension: 0.1,
+                        backgroundColor: 'rgba(75,192,192,0.4)',
+                        borderColor: 'rgba(75,192,192,1)',
+                        borderCapStyle: 'butt',
+                        borderDash: [],
+                        borderDashOffset: 0.0,
+                        borderJoinStyle: 'miter',
+                        pointBorderColor: 'rgba(75,192,192,1)',
+                        pointBackgroundColor: '#fff',
+                        pointBorderWidth: 1,
+                        pointHoverRadius: 5,
+                        pointHoverBackgroundColor: 'rgba(75,192,192,1)',
+                        pointHoverBorderColor: 'rgba(220,220,220,1)',
+                        pointHoverBorderWidth: 2,
+                        pointRadius: 1,
+                        animation: false,
+                        pointHitRadius: 10,
+                        data: []
                     }
                 ]
             }
@@ -75,6 +70,27 @@ class MetricDetail extends Component {
             .then(json => {
                 _self.setState({metric: json});
             });
+        setInterval(function () {
+            fetch("http://localhost:8090/actuator/metrics/" + _self.props.metricKey)
+                .then(response => response.json())
+                .then(json => {
+                    var d = new Date();
+                    var hour = d.getHours();
+                    var minutes = d.getMinutes();
+                    var seconds = d.getSeconds();
+                    let _graphData = _self.state.graphData;
+                    _graphData.labels.push(hour + ":" + minutes + ":" + seconds);
+                    _graphData.datasets[0].data.push(json.measurements[0].value);
+
+                    if (_graphData.labels.length > 60) {
+                        _graphData.labels = _graphData.labels.slice(1, 60);
+                        _graphData.datasets[0].data = _graphData.datasets[0].data.slice(1, 60);
+                    }
+
+                    _self.setState({metric: json, graphData: _graphData});
+                });
+        }, 1000);
+
     }
 
     render() {
@@ -102,9 +118,10 @@ class MetricDetail extends Component {
                     </CardHeader>
                     <CardBody>
                         <div className="chart-wrapper">
-                            <Line data={line}
+                            <Line data={this.state.graphData} redraw
                                   options={{
-                                      maintainAspectRatio: false
+                                      maintainAspectRatio: false,
+                                      animation: false
                                   }}
                             />
                         </div>

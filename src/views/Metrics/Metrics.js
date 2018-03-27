@@ -15,14 +15,12 @@ class Metrics extends Component {
     constructor(props) {
         super(props);
 
-        this.setLayout1 = this.setLayout1.bind(this);
-        this.setLayout2 = this.setLayout2.bind(this);
-        this.setLayout3 = this.setLayout3.bind(this);
-        this.setLayout4 = this.setLayout4.bind(this);
+        this.setLayout = this.setLayout.bind(this);
 
         this.state = {
             metrics: [],
-            layout: '4'
+            layout: '0',
+            activeLayout: '4'
         }
     }
 
@@ -31,46 +29,41 @@ class Metrics extends Component {
     }
 
     static calculateState() {
-        return {
-            sample: MetricsStore.getState()
-        };
+        return MetricsStore.getState();
     }
 
     componentDidMount() {
         MetricsActionCreator.getMetrics();
     }
 
-    setLayout1(){
-        this.setState({layout:'12'});
-    }
-    setLayout2(){
-        this.setState({layout:'6'});
-    }
-    setLayout3(){
-        this.setState({layout:'4'});
-    }
-    setLayout4(){
-        this.setState({layout:'3'});
+    setLayout(layout) {
+        this.setState({activeLayout: layout});
+        MetricsActionCreator.setMetricDetailLayout(layout);
     }
 
+
     render() {
-        const metricDetails = this.state.sample.metrics.map((metricName, i) =>
+        const metricDetails = this.state.metrics.map((metricName, i) =>
             <MetricDetail key={i} metricKey={metricName} layout={this.state.layout}/>
         );
         return (
             <div className="animated fadeIn">
                 <Row>
                     <Col xs="12" sm="6" md="4" lg="2" xl="1">
-                        <Button block onClick={this.setLayout1}>1</Button>
+                        <Button active={this.state.activeLayout == '12'}
+                            block onClick={() => this.setLayout('12')}>1</Button>
                     </Col>
                     <Col xs="12" sm="6" md="4" lg="2" xl="1">
-                        <Button block onClick={this.setLayout2}>2</Button>
+                        <Button active={this.state.activeLayout == '6'}
+                                block onClick={() => this.setLayout('6')}>2</Button>
                     </Col>
                     <Col xs="12" sm="6" md="4" lg="2" xl="1">
-                        <Button active block onClick={this.setLayout3}>3</Button>
+                        <Button active={this.state.activeLayout == '4'} block
+                                onClick={() => this.setLayout('4')}>3</Button>
                     </Col>
                     <Col xs="12" sm="6" md="4" lg="2" xl="1">
-                        <Button block onClick={this.setLayout4}>4</Button>
+                        <Button active={this.state.activeLayout == '3'}
+                                block onClick={() => this.setLayout('3')}>4</Button>
                     </Col>
                 </Row>
                 <Row>

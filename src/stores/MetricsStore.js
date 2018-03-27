@@ -6,8 +6,8 @@ class MetricsStore extends ReduceStore {
 
     getInitialState() {
         return {
-            metrics: []
-
+            metrics: [],
+            layout: '4'
         };
     }
 
@@ -18,6 +18,11 @@ class MetricsStore extends ReduceStore {
                     metrics: action.data.metrics
                 };
                 return result;
+            case ActionTypes.SET_METRIC_DETAIL_LAYOUT:
+                const layout = {
+                    layout: action.data.layout
+                };
+                return layout;
             default:
                 return state;
         }

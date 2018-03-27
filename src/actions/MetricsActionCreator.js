@@ -3,6 +3,15 @@ import ActionTypes from '../constants/AppConstants';
 
 const MetricsActionCreator = {
 
+    setMetricDetailLayout(layout) {
+        AppDispatcher.dispatch({
+            type: ActionTypes.SET_METRIC_DETAIL_LAYOUT,
+            data: {
+                'layout': layout
+            }
+        });
+    },
+
     getMetrics() {
 
         fetch("http://localhost:8090/actuator/metrics")
